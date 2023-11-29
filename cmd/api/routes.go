@@ -19,6 +19,16 @@ func (app *application) routes() *chi.Mux {
 	r.NotFound(app.notFoundResponse)
 	r.MethodNotAllowed(app.methodNotAllowedResponse)
 
+	r.Route("/v1/tools", func(r chi.Router) {
+		r.Post("/", app.requireAuthenticatedUser(app.createToolHandler))
+		r.Get("/{id}", app.requireAuthenticatedUser(app.getToolHandler))
+		r.Delete("/{id}", app.adminPermission(app.requireAuthenticatedUser(app.deleteToolHandler)))
+		r.Patch("/{id}", app.adminPermission(app.requireAuthenticatedUser(app.updateToolHandler)))
+		r.Get("/", app.getToolsHandler)
+		r.Get("/admin", app.adminPermission(app.requireAuthenticatedUser(app.getAdminToolsHandler)))
+		r.Get("/toggle-published/{id}", app.adminPermission(app.requireAuthenticatedUser(app.toggleToolPublishedHandler)))
+	})
+
 	r.Route("/v1/categories", func(r chi.Router) {
 		r.Post("/", app.requireAuthenticatedUser(app.createCategoryHandler)) 
 		r.Get("/", app.getCategoriesHandler)
