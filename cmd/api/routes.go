@@ -12,8 +12,9 @@ func (app *application) routes() *chi.Mux {
 
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+	r.Use(app.rateLimit)
 	r.Use(app.enableCORS)
-
+	r.Use(app.authenticate)
 
 	r.NotFound(app.notFoundResponse)
 	r.MethodNotAllowed(app.methodNotAllowedResponse)
