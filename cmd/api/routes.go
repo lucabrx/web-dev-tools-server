@@ -19,7 +19,18 @@ func (app *application) routes() *chi.Mux {
 	r.NotFound(app.notFoundResponse)
 	r.MethodNotAllowed(app.methodNotAllowedResponse)
 
-	
+	r.Route("/v1/categories", func(r chi.Router) {
+		r.Post("/", app.requireAuthenticatedUser(app.createCategoryHandler)) 
+		r.Get("/", app.getCategoriesHandler)
+		r.Get("/admin", app.adminPermission(app.requireAuthenticatedUser(app.getAdminCategoriesHandler)))
+		r.Delete("/{id}", app.adminPermission(app.requireAuthenticatedUser(app.deleteCategoryHandler)))
+		r.Get("/toggle-published/{id}", app.adminPermission(app.requireAuthenticatedUser(app.toggleCategoryPublishedHandler)))
+	})
+
+	r.Route("/v1/upload", func(r chi.Router) {
+		r.Post("/image", app.requireAuthenticatedUser(app.toggleCategoryPublishedHandler))
+	})
+
 
 	r.Get("/v1/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		res := map[string]string{
