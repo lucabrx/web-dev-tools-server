@@ -11,6 +11,9 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/wdt/config"
+	"github.com/wdt/internal/aws"
+	"github.com/wdt/internal/data"
+	"github.com/wdt/internal/mailer"
 )
 
 var URL = "http://localhost:8080"
@@ -19,6 +22,9 @@ type application struct {
 	logger *zerolog.Logger
 	wg     sync.WaitGroup
 	config config.AppConfig
+	models  data.Models
+	mailer mailer.Mailer
+	aws aws.AWS
 }
 
 func main() {
@@ -39,6 +45,9 @@ func main() {
 	app := application{
 		logger: &log.Logger,
 		config: cfg,
+		models: data.NewModels(db),
+		mailer: mailer.NewMailer(cfg.ResendApiKey),
+		aws: aws.NewAws(cfg.AwsAccessKey, cfg.AwsSecretKey),
 	}
 
 	err = app.serve()

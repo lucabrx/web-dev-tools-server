@@ -63,3 +63,8 @@ func (app *application) alreadyHaveSessionResponse(w http.ResponseWriter, r *htt
 	message := "you are already authenticated, this resource is only for the guests"
 	app.errorResponse(w, r, http.StatusUnauthorized, message)
 }
+
+func (app *application) rateLimitExceededResponse(w http.ResponseWriter, r *http.Request) {
+    message := "rate limit exceeded"
+    app.errorResponse(w, r, http.StatusTooManyRequests, message)
+}
