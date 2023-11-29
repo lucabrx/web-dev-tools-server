@@ -19,6 +19,17 @@ func (app *application) routes() *chi.Mux {
 	r.NotFound(app.notFoundResponse)
 	r.MethodNotAllowed(app.methodNotAllowedResponse)
 
+
+	r.Route("/v1/auth", func(r chi.Router) {
+		r.Post("/magic-link", app.registerUserWithMagicLinkHandler)
+		r.Delete("/logout", app.requireAuthenticatedUser(app.logoutHandler))
+	})
+
+
+	r.Route("/v1/users", func(r chi.Router) {
+		r.Get("/", app.requireAuthenticatedUser(app.getUserHandler))
+	})
+
 	r.Route("/v1/tools", func(r chi.Router) {
 		r.Post("/", app.requireAuthenticatedUser(app.createToolHandler))
 		r.Get("/{id}", app.requireAuthenticatedUser(app.getToolHandler))
