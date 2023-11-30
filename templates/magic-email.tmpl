@@ -40,21 +40,6 @@
             background-color: hsl(346.8, 77.2%, 40%);
         }
 
-        .logo {
-            font-size: 2xl;
-            font-weight: bold;
-            text-decoration: none;
-            color: #121212;
-            display: flex;
-            align-items: center;
-        }
-
-        .logo span {
-            background: linear-gradient(to left, hsl(346.8, 77.2%, 49.8%), hsl(346.8, 77.2%, 40%));
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-left: 5px;
-        }
 
         h2 {
             margin-top: 0;
@@ -69,11 +54,13 @@
         <div class="content">
             <p>Hello there,</p>
             <p>We're thrilled to have you as a part of our community. To securely access your account, check out the details below:</p>
-            <h2 class="logo">
-                <span>Web Dev Tools</span>
-            </h2>
-            <p>If you didn't request this, you can safely ignore this email.</p>
-            <p style="font-size: 18px;">Thank you for choosing Web Dev Tools as your platform.</p>
+
+            <a style="font-size: 18px;" href="{{.MagicLinkToken}}">
+                Access Magic Link
+            </a>
+            
+            <p style="font-size:14px;">If you didn't request this, you can safely ignore this email.</p>
+            <p style="font-size: 14px;">Thank you for choosing Web Dev Tools as your platform.</p>
         </div>
     </div>
 </body>

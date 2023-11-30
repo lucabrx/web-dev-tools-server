@@ -1,0 +1,22 @@
+INSERT INTO tools (name, description, image_url, category, website)
+VALUES
+    ('Radix', 'Radix is a modern React component framework designed for easy user interface development.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/radix.png', 'UI', 'https://www.radix-ui.com/'),
+    ('Sonner', 'Sonner is cool looking toast notifications', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/sonner.jpeg', 'UI', 'https://sonner.emilkowal.ski/'),
+    ('Lucide', 'Lucide is an icon library that facilitates the integration of vector icons into web projects.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/lucide.png', 'Icons', 'https://lucide.dev/'),
+    ('Prisma', 'Prisma is a modern ORM tool for working with databases in JS and TS applications.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/prisma.png', 'DB', 'https://www.prisma.io/'),
+    ('Drizzle', 'Drizzle is a very fast type-safty ORM', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/drizzle.jpeg', 'DB', 'https://orm.drizzle.team/'),
+    ('Turso', 'Turso is very fast and affordable sqlite DB.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/turso.png', 'DB', 'https://turso.tech/'),
+    ('Planetscale', 'PlanetScale is a platform for managing databases in the cloud.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/planetscale.jpeg', 'DB', 'https://planetscale.com/'),
+    ('Figma', 'Figma is a interface design tool that allows real-time collaboration.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/figma.png', 'UI', 'https://www.figma.com/'),
+    ('Shadcn', 'Shadcn is a library for easily incorporating react components into your code.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/shadcn.png', 'UI', 'https://ui.shadcn.com/'),
+    ('Melt', 'Melt is a component library in Svelte', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/melt.png', 'UI', 'https://www.melt-ui.com/'),
+    ('Bun', 'Bun is a very fast JS runtime, with a lot of cool features.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/bun.png', 'Frameworks', 'https://bun.sh/'),
+    ('Zod', 'Zod is a tool for easy validation of your data or forms.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/zod.png', 'Forms', 'https://zod.dev/'),
+    ('React-hook-form', 'React Hook Form is a library for easily managing forms in React applications.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/react-hook-form.png', 'Form', 'https://react-hook-form.com/'),
+    ('React', 'React is a library for building user interfaces in JavaScript and JSX.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/react.png', 'Frameworks', 'https://react.dev/'),
+    ('Zustand', 'Zustand is a simple tool for managing state in React applications without the need for Redux.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/zustand.png', 'State', 'https://docs.pmnd.rs/zustand/getting-started/introduction'),
+    ('Redux', 'Redux is a library for managing state in JavaScript applications, especially in React applications.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/redux.png', 'State', 'https://redux.js.org/'),
+    ('Vercel', 'Vercel is a platform for deploying and hosting web applications with ease.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/vercel.png', 'DevOps', 'https://vercel.com/'),
+    ('Vue', 'Vue.js is a progressive JavaScript framework for building user interfaces.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/vue.png', 'Frameworks', 'https://vuejs.org/'),
+    ('Svelte', 'Svelte is a radical new approach to building user interfaces.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/svelte.png', 'Frameworks', 'https://svelte.dev/'),
+    ('Tailwind', 'Tailwind CSS is a utility-first CSS framework that makes it easy to build modern, responsive designs.', 'https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/tailwind.png', 'CSS', 'https://tailwindcss.com/');
