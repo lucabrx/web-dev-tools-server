@@ -81,11 +81,11 @@ func (app *application) sessionCookie(value string, expires time.Time) *http.Coo
 		Name:     "session",
 		Value:    value,
 		Path:     "/",
-		Secure:   false, // Change to true in production
+		Secure:   true, // Change to true in production
 		HttpOnly: true,
 		Expires:  expires,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   "localhost",
+		Domain:   "api.web-dev-tools.xyz",
 	}
 }
 
