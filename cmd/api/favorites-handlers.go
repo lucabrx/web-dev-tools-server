@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/go-chi/chi/v5"
+	"github.com/wdt/internal/data"
 	"net/http"
 	"strconv"
 )
@@ -50,7 +51,19 @@ func (app *application) getFavoritesHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"favorites": favorites}, nil)
+	var tools []*data.Tool
+
+	for _, favorite := range favorites {
+		tool, err := app.models.Tools.Get(favorite.ToolId)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+		tool.Favorite = true
+		tools = append(tools, tool)
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"tools": tools}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return
