@@ -17,7 +17,7 @@ func (app *application) createToolHandler(w http.ResponseWriter, r *http.Request
 		Category    string `json:"category"`
 		Description string `json:"description"`
 		ImageUrl    string `json:"imageUrl"`
-		Website  string `json:"website"`
+		Website     string `json:"website"`
 	}
 
 	err := app.readJSON(w, r, &input)
@@ -26,17 +26,14 @@ func (app *application) createToolHandler(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	
-
 	tool := &data.Tool{
 		Name:        input.Name,
 		Category:    input.Category,
 		Description: input.Description,
 		ImageUrl:    input.ImageUrl,
 		Published:   false,
-		Website:    input.Website,
+		Website:     input.Website,
 	}
-
 
 	v := validator.New()
 	if data.ValidateTools(v, tool); !v.Valid() {
@@ -58,7 +55,7 @@ func (app *application) createToolHandler(w http.ResponseWriter, r *http.Request
 
 func (app *application) getToolHandler(w http.ResponseWriter, r *http.Request) {
 	params := chi.URLParam(r, "id")
-	id,err := strconv.ParseInt(params, 10, 64)
+	id, err := strconv.ParseInt(params, 10, 64)
 	if err != nil {
 		app.notFoundResponse(w, r)
 		return
@@ -83,7 +80,7 @@ func (app *application) getToolHandler(w http.ResponseWriter, r *http.Request) {
 
 func (app *application) updateToolHandler(w http.ResponseWriter, r *http.Request) {
 	params := chi.URLParam(r, "id")
-	id,err := strconv.ParseInt(params, 10, 64)
+	id, err := strconv.ParseInt(params, 10, 64)
 	if err != nil {
 		app.notFoundResponse(w, r)
 		return
@@ -129,7 +126,6 @@ func (app *application) updateToolHandler(w http.ResponseWriter, r *http.Request
 	if input.Published != nil {
 		tool.Published = *input.Published
 	}
-	
 
 	v := validator.New()
 	if data.ValidateTools(v, tool); !v.Valid() {
@@ -157,7 +153,7 @@ func (app *application) updateToolHandler(w http.ResponseWriter, r *http.Request
 
 func (app *application) deleteToolHandler(w http.ResponseWriter, r *http.Request) {
 	params := chi.URLParam(r, "id")
-	id,err := strconv.ParseInt(params, 10, 64)
+	id, err := strconv.ParseInt(params, 10, 64)
 	if err != nil {
 		app.notFoundResponse(w, r)
 		return
@@ -179,7 +175,7 @@ func (app *application) deleteToolHandler(w http.ResponseWriter, r *http.Request
 
 func (app *application) toggleToolPublishedHandler(w http.ResponseWriter, r *http.Request) {
 	params := chi.URLParam(r, "id")
-	id,err := strconv.ParseInt(params, 10, 64)
+	id, err := strconv.ParseInt(params, 10, 64)
 	if err != nil {
 		app.notFoundResponse(w, r)
 		return
@@ -216,6 +212,7 @@ func (app *application) toggleToolPublishedHandler(w http.ResponseWriter, r *htt
 }
 
 func (app *application) getToolsHandler(w http.ResponseWriter, r *http.Request) {
+	session := app.contextGetUser(r)
 
 	var meta struct {
 		data.Filters
@@ -237,7 +234,23 @@ func (app *application) getToolsHandler(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"tools": tools, "metadata" : metadata}, nil)
+	if session != nil {
+		favorites, err := app.models.Favorites.GetFavorites(session.ID)
+		if err != nil {
+			app.serverErrorResponse(w, r, err)
+			return
+		}
+		for _, tool := range tools {
+			for _, favorite := range favorites {
+				if tool.ID == favorite.ToolId {
+					tool.Favorite = true
+				}
+			}
+		}
+
+	}
+
+	err = app.writeJSON(w, http.StatusOK, envelope{"tools": tools, "metadata": metadata}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -246,7 +259,6 @@ func (app *application) getToolsHandler(w http.ResponseWriter, r *http.Request) 
 func (app *application) getAdminToolsHandler(w http.ResponseWriter, r *http.Request) {
 
 	var meta struct {
-		
 		data.Filters
 	}
 
@@ -258,9 +270,7 @@ func (app *application) getAdminToolsHandler(w http.ResponseWriter, r *http.Requ
 	meta.Filters.Page = app.readInt(qs, "page", 1, v)
 	meta.Filters.PageSize = app.readInt(qs, "pageSize", 20, v)
 	search := app.readString(qs, "search", "")
-			
 
-	
 	tools, metadata, err := app.models.Tools.GetAll(meta.Filters, search)
 
 	if err != nil {
@@ -273,7 +283,7 @@ func (app *application) getAdminToolsHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"tools": tools, "metadata" : metadata}, nil)
+	err = app.writeJSON(w, http.StatusOK, envelope{"tools": tools, "metadata": metadata}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
