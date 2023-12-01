@@ -35,9 +35,9 @@ func (app *application) uploadImageHandler(w http.ResponseWriter, r *http.Reques
 	}
 	ext := strings.Split(handler.Header.Get("Content-Type"), "/")[1]
 	name := id.String() + "." + ext
-	url := "https://web-dev-tools-v3.s3.eu-central-1.amazonaws.com/" + name
+	url := "https://web-dev-tools-bucket.s3.eu-central-1.amazonaws.com/" + name
 
-	_, err = c.PutObject(r.Context(), "web-dev-tools-v3", name, file, handler.Size, minio.PutObjectOptions{ContentType: handler.Header.Get("Content-Type")})
+	_, err = c.PutObject(r.Context(), "web-dev-tools-bucket", name, file, handler.Size, minio.PutObjectOptions{ContentType: handler.Header.Get("Content-Type")})
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 		return

@@ -15,15 +15,16 @@ type ToolModel struct {
 }
 
 type Tool struct {
-	ID        int64     `json:"id"`
-	CreatedAt time.Time `json:"createdAt"`
-	Name      string    `json:"name"`
-	Category  string    `json:"category"`
-	Description string  `json:"description"`
-	ImageUrl  string    `json:"imageUrl"`
-	Published bool      `json:"published,omitempty"`
-	Website   string    `json:"website"`
-	Version   int64     `json:"version,omitempty"`
+	ID          int64     `json:"id"`
+	CreatedAt   time.Time `json:"createdAt"`
+	Name        string    `json:"name"`
+	Category    string    `json:"category"`
+	Description string    `json:"description"`
+	ImageUrl    string    `json:"imageUrl"`
+	Published   bool      `json:"published,omitempty"`
+	Website     string    `json:"website"`
+	Version     int64     `json:"version,omitempty"`
+	Favorite    bool      `json:"favorite,omitempty"`
 }
 
 func ValidateTools(v *validator.Validator, tool *Tool) {
@@ -144,15 +145,14 @@ func (m ToolModel) Update(tool *Tool) error {
 }
 
 func (m ToolModel) GetAll(filters Filters, search string) ([]*Tool, Metadata, error) {
-    baseQuery := `SELECT count(*) OVER(), id, created_at, name, category, coalesce(image_url, ''), description, published, website
+	baseQuery := `SELECT count(*) OVER(), id, created_at, name, category, coalesce(image_url, ''), description, published, website
               FROM tools`
 
 	advQuery := fmt.Sprintf(` ORDER BY %s %s`, filters.sortColumn(), filters.sortDirection())
 
-    if search != "" {
-        baseQuery += ` WHERE name ILIKE '%' || $3 || '%' OR category ILIKE '%' || $3 || '%'`
-    }
-
+	if search != "" {
+		baseQuery += ` WHERE name ILIKE '%' || $3 || '%' OR category ILIKE '%' || $3 || '%'`
+	}
 
 	query := baseQuery + advQuery + ` LIMIT $1 OFFSET $2`
 	args := []interface{}{filters.limit(), filters.offset()}
@@ -160,49 +160,48 @@ func (m ToolModel) GetAll(filters Filters, search string) ([]*Tool, Metadata, er
 		args = append(args, search)
 	}
 
-    fmt.Println(query)
-    ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-    defer cancel()
+	fmt.Println(query)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
 
-    rows, err := m.DB.QueryContext(ctx, query, args...)
-    if err != nil {
-        return nil, Metadata{}, err
-    }
-    defer rows.Close()
+	rows, err := m.DB.QueryContext(ctx, query, args...)
+	if err != nil {
+		return nil, Metadata{}, err
+	}
+	defer rows.Close()
 
-    totalRecords := 0
-    var tools []*Tool
+	totalRecords := 0
+	var tools []*Tool
 
-    for rows.Next() {
-        var tool Tool
+	for rows.Next() {
+		var tool Tool
 
-        err := rows.Scan(
-            &totalRecords,
-            &tool.ID,
-            &tool.CreatedAt,
-            &tool.Name,
-            &tool.Category,
-            &tool.ImageUrl,
-            &tool.Description,
-            &tool.Published,
-            &tool.Website,
-        )
+		err := rows.Scan(
+			&totalRecords,
+			&tool.ID,
+			&tool.CreatedAt,
+			&tool.Name,
+			&tool.Category,
+			&tool.ImageUrl,
+			&tool.Description,
+			&tool.Published,
+			&tool.Website,
+		)
 
-        if err != nil {
-            return nil, Metadata{}, err
-        }
+		if err != nil {
+			return nil, Metadata{}, err
+		}
 
-        tools = append(tools, &tool)
-    }
+		tools = append(tools, &tool)
+	}
 
-    if err = rows.Err(); err != nil {
-        return nil, Metadata{}, err
-    }
+	if err = rows.Err(); err != nil {
+		return nil, Metadata{}, err
+	}
 
-    metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
-    return tools, metadata, nil
+	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
+	return tools, metadata, nil
 }
-
 
 func (m ToolModel) GetAllPublished(search string, filters Filters) ([]*Tool, Metadata, error) {
 	baseQuery := `SELECT count(*) OVER(), id, created_at, name, category, coalesce(image_url, ''), description, website
@@ -210,22 +209,19 @@ func (m ToolModel) GetAllPublished(search string, filters Filters) ([]*Tool, Met
 			  WHERE published = true`
 
 	if search != "" {
-    	baseQuery += ` AND (name ILIKE '%' || $3 || '%' OR category ILIKE '%' || $3 || '%')`
+		baseQuery += ` AND (name ILIKE '%' || $3 || '%' OR category ILIKE '%' || $3 || '%')`
 	}
 
 	advQuery := fmt.Sprintf(` ORDER BY %s %s`, filters.sortColumn(), filters.sortDirection())
 
-	
-
 	query := baseQuery + advQuery + ` LIMIT $1 OFFSET $2`
-
 
 	args := []interface{}{filters.limit(), filters.offset()}
 
 	if search != "" {
 		args = append(args, search)
 	}
-	
+
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -253,7 +249,7 @@ func (m ToolModel) GetAllPublished(search string, filters Filters) ([]*Tool, Met
 		)
 
 		if err != nil {
-			return nil, Metadata{},  err
+			return nil, Metadata{}, err
 		}
 
 		tools = append(tools, &tool)
@@ -265,5 +261,5 @@ func (m ToolModel) GetAllPublished(search string, filters Filters) ([]*Tool, Met
 
 	metadata := calculateMetadata(totalRecords, filters.Page, filters.PageSize)
 
-	return tools, metadata,  nil
+	return tools, metadata, nil
 }

@@ -12,6 +12,8 @@ import (
 	"time"
 
 	validator "github.com/wdt/internal/validators"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/github"
 )
 
 type envelope map[string]interface{}
@@ -115,4 +117,16 @@ func (app *application) readInt(qs url.Values, key string, defaultValue int, v *
 		return defaultValue
 	}
 	return i
+}
+
+func (app *application) githubConfig() *oauth2.Config {
+	githubOauthConfig := &oauth2.Config{
+		ClientID:     app.config.GithubClientID,
+		ClientSecret: app.config.GithubClientSecret,
+		Endpoint:     github.Endpoint,
+		RedirectURL: "http://localhost:8080/v1/auth/github/callback",
+		Scopes: 	 []string{"user:email"},
+	}
+
+	return githubOauthConfig
 }
