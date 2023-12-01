@@ -13,6 +13,8 @@ migrate-up-test:
 	echo "Migrating up..."
 	migrate -path ./migrations -database postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable  up
 
+test:
+	go test -v -cover ./...
 
 lint:
 	golangci-lint run

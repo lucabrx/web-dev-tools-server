@@ -31,6 +31,12 @@ func (app *application) routes() *chi.Mux {
 		r.Get("/", app.requireAuthenticatedUser(app.getUserHandler))
 	})
 
+	r.Route("/v1/favorites", func(r chi.Router) {
+		r.Post("/", app.requireAuthenticatedUser(app.addFavoriteHandler))
+		r.Get("/", app.requireAuthenticatedUser(app.getFavoritesHandler))
+		r.Delete("/{id}", app.requireAuthenticatedUser(app.removeFavoriteHandler))
+	})
+
 	r.Route("/v1/tools", func(r chi.Router) {
 		r.Post("/", app.requireAuthenticatedUser(app.createToolHandler))
 		r.Get("/{id}", app.requireAuthenticatedUser(app.getToolHandler))

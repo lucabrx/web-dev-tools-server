@@ -22,7 +22,6 @@ type Category struct {
 	Version   int64     `json:"version,omitempty"`
 }
 
-
 func ValidateCategories(v *validator.Validator, category *Category) {
 	v.Check(category.Name != "", "name", "must be provided")
 	v.Check(len(category.Name) <= 500, "name", "must not be more than 500 bytes long")
@@ -73,7 +72,13 @@ func (m CategoryModel) Get(id int64) (*Category, error) {
 	)
 
 	if err != nil {
-		return nil, err
+
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
 	}
 
 	return &category, nil
@@ -83,8 +88,8 @@ func (m CategoryModel) GetAll(filters Filters) ([]*Category, Metadata, error) {
 	query := fmt.Sprintf(`SELECT count(*) OVER(), id, name, published, created_at
 			  FROM categories
 			  ORDER BY %s %s
-			  LIMIT $1 OFFSET $2`,  
-			  filters.sortColumn(), filters.sortDirection())
+			  LIMIT $1 OFFSET $2`,
+		filters.sortColumn(), filters.sortDirection())
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
