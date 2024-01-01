@@ -39,7 +39,7 @@ jobs:
           which migrate
 
       - name: Run migrations
-        run: make migrate-up-test
+        run: task migrate-up-test
 
       - name: Test
-        run: make test
+        run: task test
