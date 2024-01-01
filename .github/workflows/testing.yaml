@@ -45,7 +45,8 @@ jobs:
           which migrate
 
       - name: Run migrations
-        run: task migrate-up-test
+        run: task --taskfile Taskfile.yaml migrate-up-test
+
 
       - name: Test
-        run: task test
+        run: task --taskfile Taskfile.yaml test
