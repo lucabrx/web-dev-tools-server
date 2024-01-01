@@ -30,8 +30,8 @@ tasks:
 
   build:
     cmds:
-      - go build -o /bin/server ./cmd/api
-      - ./bin/server
+      - go build -o ./bin/api ./cmd/api
+      - ./bin/api
 
   run:
     cmds:

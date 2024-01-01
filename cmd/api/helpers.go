@@ -85,7 +85,7 @@ func (app *application) sessionCookie(value string, expires time.Time) *http.Coo
 		HttpOnly: true,
 		Expires:  expires,
 		SameSite: http.SameSiteLaxMode,
-		Domain:   "api.web-dev-tools.xyz",
+		Domain:   "localhost",
 	}
 }
 
@@ -124,8 +124,8 @@ func (app *application) githubConfig() *oauth2.Config {
 		ClientID:     app.config.GithubClientID,
 		ClientSecret: app.config.GithubClientSecret,
 		Endpoint:     github.Endpoint,
-		RedirectURL: "http://localhost:8080/v1/auth/github/callback",
-		Scopes: 	 []string{"user:email"},
+		RedirectURL:  "https://api.web-dev-tools.xyz/v1/auth/github/callback",
+		Scopes:       []string{"user:email"},
 	}
 
 	return githubOauthConfig
