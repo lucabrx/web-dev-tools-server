@@ -1,0 +1,39 @@
+version: '3'
+
+tasks:
+  postgres-container:
+    cmds:
+      - docker run --name web-dev-tools -e POSTGRES_PASSWORD=postgres -d -p 5432:5432 postgres
+
+  migrate-create:
+    cmds:
+      - echo "Creating migration... {{.name}}"
+      - migrate create -seq -ext=.sql -dir=./migrations "{{.name}}"
+
+  migrate-up:
+    cmds:
+      - echo "Migrating up..."
+      - migrate -path ./migrations -database ${DB_URL} up
+
+  migrate-up-test:
+    cmds:
+      - echo "Migrating up..."
+      - migrate -path ./migrations -database postgres://postgres:postgres@localhost:5432/postgres?sslmode=disable up
+
+  test:
+    cmds:
+      - go test -v -cover ./...
+
+  lint:
+    cmds:
+      - golangci-lint run
+
+  build:
+    cmds:
+      - go build -o /bin/server ./cmd/api
+      - ./bin/server
+
+  run:
+    cmds:
+      - go run ./cmd/api
+
